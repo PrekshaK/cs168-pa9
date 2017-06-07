@@ -53,6 +53,7 @@ def findOptimal(r):
 
     diff = [math.fabs(x[i] - xbar.value[i]) for i in xrange(len(x))]
     norm_diff = np.linalg.norm(diff, ord=1)
+    print "norm diff for this candidate is ", norm_diff
     return norm_diff
 
 
@@ -63,8 +64,8 @@ def binarySearch(rs, start, end, r):
 
     mid = (start + end)/2
     candidate = rs[mid]
-    print candidate
-    
+    print "candidate ", candidate
+
     if findOptimal(candidate) <= 0.001:
         r = candidate
         binarySearch(rs, start, mid-1, r)
@@ -73,7 +74,6 @@ def binarySearch(rs, start, end, r):
         binarySearch(rs, mid+1, end, r)
 
 rs = [i for i in xrange(600)]
-# print binarySearch(rs)
 least_r = binarySearch(rs, 0, len(rs)-1, -1)
 print "least r is ", least_r
 
