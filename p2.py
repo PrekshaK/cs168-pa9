@@ -92,5 +92,17 @@ for i in xrange(203):
 
 plt.imshow(naive_img)
 plt.gray()
-plt.savefig('recovered_stanford_tree.png')  
+plt.savefig('recovered_stanford_tree_2b.png')  
+plt.show()
+
+from cvxpy import Variable, Minimize, Problem, mul_elemwise, tv
+U = Variable(*img.shape)
+obj = Minimize(tv(U))
+constraints = [mul_elemwise(Known, U) == mul_elemwise(Known, img)]
+prob = Problem(obj, constraints)
+prob.solve()
+# recovered image is now in U.value
+plt.imshow(U.value)
+plt.gray()
+plt.savefig('recovered_stanford_tree_2c.png')
 plt.show()
