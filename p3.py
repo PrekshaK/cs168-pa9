@@ -53,8 +53,8 @@ for i in xrange(m):
 
 constraints.append(U == U.T)
 prob = Problem(objective, constraints)
-print "the prob status is ", prob.status
 prob.solve()
+print "the prob status is ", prob.status
 
 mhat_norm = np.linalg.norm(M_hat, 'fro')
 U_norm = np.linalg.norm(U.value, 'fro')
