@@ -1,7 +1,11 @@
+
+#-----------------------------------1 B------------------------------------
+
 import numpy as np
 from scipy import ndimage
 from cvxpy import *
 import math
+import matplotlib.pyplot as plt
 
 mean, var = 0, 1
 m = 1200
@@ -25,8 +29,6 @@ objective = Minimize(norm(xbar, 1))
 constraints = [0 <= xbar, xbar <= 1, Ar*xbar - br == 0]
 prob = Problem(objective, constraints)
 prob.solve()
-# print "Optimal value", prob.solve()
-# print "Optimal var"
 print xbar.value 
 
 print "norm of xbar is ", np.linalg.norm(xbar.value, ord=1)
@@ -34,7 +36,7 @@ print "norm of x is ", np.linalg.norm(x, ord=1)
 
 
 
-#--------------------------------Part C---------------------------------------------
+#--------------------------------1 C---------------------------------------------
 
 
 
@@ -56,8 +58,8 @@ def findOptimal(r):
     print "norm diff ", norm_diff
     return norm_diff
 
-
-def binarySearch(rs, start, end, r):
+def binarySearch(rs, start, end, R):
+    r = R
     if start > end:
         print "so the least r is ", r
         return r
@@ -68,15 +70,26 @@ def binarySearch(rs, start, end, r):
 
     if findOptimal(candidate) <= 0.001:
         r = candidate
-        binarySearch(rs, start, mid-1, r)
+        return binarySearch(rs, start, mid-1, r)
 
     elif findOptimal(candidate) > 0.001:
-        binarySearch(rs, mid+1, end, r)
-
-    return r
+        return binarySearch(rs, mid+1, end, r)
 
 rs = [i for i in xrange(600)]
 least_r = binarySearch(rs, 0, len(rs)-1, -1)
 print "least r is ", least_r
+
+
+#------------------------------------1 D----------------------------------------------
+
+r_sts = [i for i in xrange(least_r-11, least_r+3)]
+
+norm_diffs = []
+
+for r in r_sts:
+    norm_diff = findOptimal(r)
+    norm_diffs.append(norm_diff)
+plt.plot(r_sts, norm_diffs)
+plt.show()
 
 
