@@ -40,8 +40,6 @@ for i in xrange(m):
 
 
 masked = np.ma.masked_where(M_hat==0, M_hat)
-print "norm of M_hat is ", np.linalg.norm(M_hat, ord=1)
-
 U = Variable(m, m) 
 objective = Minimize(trace(U))
 
@@ -53,8 +51,13 @@ for i in xrange(m):
         if masked.mask[i][j] == False:
             constraints.append(U[i, j] == masked[i][j])
 
+constraints.append(U == U.T)
 prob = Problem(objective, constraints)
 print "the prob status is ", prob.status
 prob.solve()
-print np.linalg.norm(U.value, ord=1)
+
+mhat_norm = np.linalg.norm(M_hat, 'fro')
+U_norm = np.linalg.norm(U.value, 'fro')
+print "diff norm is ", math.fabs(mhat_norm - U_norm)
+
 
